@@ -1,0 +1,70 @@
+#!/bin/bash
+#shyno
+
+error()
+{
+clear;
+echo -e "\e[1;31mERROR: write the correct sign..\e[0m";
+sleep 0.6;
+}
+
+
+anyKey()
+{
+echo "";
+echo -en "\e[1;30mpress any key: \e[0m";
+ read choice
+    case $choice in
+"") $1; ;;
+*) $1; ;;
+    esac;
+}
+
+
+idProcessing()
+{
+clear;
+ipValue=$(curl ident.me);
+dateValue=$(date +%F);
+echo "";
+echo -en "\e[1;30mEnter the object name: \e[0m";
+ read object
+#saving logs
+curl -v ident.me 2> data/"$dateValue.$object.$ipValue".txt 1> data/"$dateValue.$object.$ipValue".txt;
+echo "";
+echo "$ipValue";
+echo "";
+echo -e "\e[1;30mComplete..\e[0m";
+}
+
+
+internetChecking()
+{
+ping -c 1 google.com | grep "ping" > /dev/null;
+    case $? in
+0) idProcessing; ;;
+*) clear; echo "";
+echo -e "\e[1;30mInternet not available\e[0m"; anyKey shyno; ;;
+    esac;
+}
+
+
+shyno()
+{
+clear;
+echo -e "\e[1;30mChoose the point:\e[0m";
+echo "";
+echo -e "\e[1;30m0. start checking ip\e[0m";
+echo -e "\e[1;30m1. clear all logs\e[0m";
+echo -e "\e[1;30mx. exit\e[0m";
+ read choice
+    case $choice in
+0) internetChecking; ;;
+1) clear; rm -rf data/*;
+echo ""; echo "log cleared";
+anyKey shyno; ;;
+"x") echo ""; exit 0; ;;
+*) error; shyno; ;;
+    esac;
+}
+shyno;
